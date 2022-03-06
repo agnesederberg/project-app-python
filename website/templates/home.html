@@ -1,22 +1,22 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-  %}
-  <h1 align="center">Notes</h1>
-  <ul class="list-group list-group-flush" id="notes">
-    {% for note in user.notes %}
-    <li class="list-group-item">
-      {{ note.data }}
-      <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+
+  <h1 align="center">Folders</h1>
+  <ul class="list-group list-group-flush" id="folders">
+    {% for folder in user.folder %}
+    <form method="GET">
+    <button type="button" method='GET' class="btn btn-link", onClick="location.href='/ny'">{{ folder.data }}</button>
+  </form>
+    <button type="button" class="close" onClick="deleteFolder({{ folder.id }})">
         <span aria-hidden="true">&times;</span>
       </button>
-    </li>
     {% endfor %}
   </ul>
   <form method="POST">
-    <textarea name="note" id="note" class="form-control"></textarea>
+    <textarea name="folder" id="folder" class="form-control"></textarea>
     <br />
     <div align="center">
-      <img src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" width="100"/>
-      <button type="submit" class="btn btn-primary" style="background-color: palevioletred;">Create Note</button>
+      <img src="https://i.redd.it/vja0cu8sbyf71.png" width="100"/>
+      <button type="submit" class="btn btn-primary" style="background-color: rgb(236, 66, 43);">Create Folder</button>
     </div>
   </form>
   {% endblock %}
