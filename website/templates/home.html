@@ -3,13 +3,38 @@
   <h1 align="center">Folders</h1>
   <ul class="list-group list-group-flush" id="folders">
     {% for folder in user.folder %}
-    <form method="GET">
-    <button type="button" method='GET' class="btn btn-link", onClick="location.href='/ny'">{{ folder.data }}</button>
+    <a href="/home/{{ folder.id }}">
+      <button>{{ folder.name }}</button>
+  </a>
+  <button type="button" class="close" onClick="deleteFolder({{ folder.id }})">
+  <span aria-hidden="true">&times;</span>
+  </button>
+  {% endfor %}
+</ul>
+<form method="POST">
+  <textarea name="folder" id="folder" class="form-control"></textarea>
+  <br />
+  <div align="center">
+    <img src="https://i.redd.it/vja0cu8sbyf71.png" width="100"/>
+    <button type="submit" class="btn btn-primary" style="background-color: rgb(236, 66, 43);">Create Folder</button>
+  </div>
+</form>
+{% endblock %}
+
+
+
+
+
+
+<!-- detta är gammalt:
+   <form method="GET">
+    <button type="button" method='GET' class="btn btn-link", onClick="location.href='/ny/{{ folder.id }}'">{{ folder.data }}</button>
   </form>
     <button type="button" class="close" onClick="deleteFolder({{ folder.id }})">
         <span aria-hidden="true">&times;</span>
       </button>
-    {% endfor %}
+    {% endfor %} --!>
+
   </ul>
   <form method="POST">
     <textarea name="folder" id="folder" class="form-control"></textarea>
@@ -20,3 +45,21 @@
     </div>
   </form>
   {% endblock %}
+
+ detta är nytt:
+  <a href="/home/{{ folder.id }}">
+    <button>{{ folder.name }}</button>
+</a>
+<button type="button" class="close" onClick="deleteFolder({{ folder.id }})">
+<span aria-hidden="true">&times;</span>
+</button>
+{% endfor %}
+</ul>
+<form method="POST">
+<textarea name="folder" id="folder" class="form-control"></textarea>
+<br />
+<div align="center">
+<button type="submit" class="btn btn-primary">Add Folder</button>
+</div>
+</form>
+{% endblock %}
