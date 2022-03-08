@@ -1,3 +1,4 @@
+from unicodedata import name
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
 from .models import Note, Folder
@@ -23,6 +24,7 @@ def home():
 
     return render_template("home.html", user=current_user)
 
+
 @views.route('/delete-folder', methods=['POST'])
 def delete_folder():
     folder = json.loads(request.data)
@@ -35,34 +37,18 @@ def delete_folder():
 
     return jsonify({})
 
-
-# Försöker öppna unikt fönster/unik route efter folder id
-# Olika folder.id ska öppna olika sidor där notes sparas
-# Vi får en unik url men varför tillåts inte metoden?
-
-@views.route('/home/<int:folder_id>', methods=['POST, GET'])
+@views.route('/home/<int:folder_id>', methods=['GET', 'POST'])
 def note_view(folder_id):
     folder = Folder.query.get_or_404(folder_id)
+    if request.method == 'POST':
+        note = request.form.get('note')
 
-    return render_template('page.html', title = folder.name, folder = folder)
+        if len(note) < 1:
+            flash('Note is too short!', category='error')
+        else:
+            new_note = Note(data=note, folder_id=folder.id)
+            db.session.add(new_note)
+            db.session.commit()
+            flash('Note added!', category='success')
 
-
-
-
-
-   # @views.route('/folder', methods = ['GET, POST'])
-#def folder():
-        
-  #  if request.method == 'POST':
-  #         pass
- #           note = request.form.get('note')
-    
-     #   if len(note) < 1:
-     ##       flash('Note is too short!', category='error')
-   ##     else:
-     #       new_note = Note(data=note, user_id=Folder.id)
-      #      db.session.add(new_note)
-       #     db.session.commit()
-        #    flash('Note added!', category='success')
-        
-    #return render_template("folder.html")
+    return render_template('notes.html', title = folder.name, folder = folder, user=current_user)
