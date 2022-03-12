@@ -23,3 +23,9 @@ class Folder(db.Model):
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     notes = db.relationship('Note')
+    category = db.Column(db.Integer, db.ForeignKey('category.id'), nullable = True)
+
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    folders = db.relationship('Folder')

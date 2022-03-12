@@ -6,3 +6,12 @@ function deleteFolder(folderId) {
       window.location.href = "/";
     });
   }
+  
+  function deleteNote(noteId, folderId) {
+    fetch('/delete-note', {
+      method: "POST",
+      body: JSON.stringify({ noteId: noteId }),
+    }).then((_res) => {
+      window.location.href = "/home/"+folderId;
+    });
+  }

@@ -3,7 +3,6 @@
   <h1 align="center">Folders</h1>
   <ul class="list-group list-group-flush" id="folders">
     {% for folder in user.folders %}
-        <!-- Försöker länka till en folder -->
         <a href="/home/{{ folder.id }}">
             <button>{{ folder.name }}</button>
         </a>
@@ -16,7 +15,17 @@
     <textarea name="folder" id="folder" class="form-control"></textarea>
     <br />
     <div align="center">
-      <button type="submit" class="btn btn-primary">Add Folder</button>
+      <img src="https://www.iconpacks.net/icons/2/free-folder-icon-1439-thumb.png" width="100"/>
+      <button type="submit" class="btn btn-primary" style="background-color: rgb(52, 124, 50);">Add Folder</button>
     </div>
+  </form>
+  <form action="#">
+    <label for="category">Choose a category:</label>
+    <select name="Category" id="category">
+  {% for x in category %}
+      <option value="">{{ x.name }}</option>
+  {% endfor %}
+    </select>
+    <br><br>
   </form>
   {% endblock %}

@@ -5,7 +5,7 @@
     {% for note in folder.notes %}
     <li class="list-group-item">
       {{ note.data }}
-      <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+      <button type="button" class="close" onClick="deleteNote({{ note.id }}, {{ note.folder_id }})">
         <span aria-hidden="true">&times;</span>
       </button>
     </li>
@@ -16,7 +16,7 @@
     <br />
     <div align="center">
       <img src="https://cdn-icons-png.flaticon.com/512/2599/2599636.png" width="100"/>
-      <button type="submit" class="btn btn-primary" style="background-color: palevioletred;">Create Note</button>
+      <button type="submit" class="btn btn-primary" style="background-color: rgb(52, 124, 50);">Create Note</button>
     </div>
   </form>
   {% endblock %}
