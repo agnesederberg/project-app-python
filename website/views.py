@@ -1,7 +1,7 @@
 from unicodedata import name
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
-from .models import Note, Folder
+from .models import Note, Folder, Category
 from . import db
 import json
 
@@ -11,6 +11,14 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
+    #new_category = Category(name="Work")
+    #db.session.add(new_category)
+    #db.session.commit()
+    #new_category = Category(name="Hiking")
+    #db.session.add(new_category)
+    #db.session.commit()
+    category = Category.query.all()
+
     if request.method == 'POST':
         folder = request.form.get('folder')
 
@@ -22,7 +30,7 @@ def home():
             db.session.commit()
             flash('Folder added!', category='success')
 
-    return render_template("home.html", user=current_user)
+    return render_template("home.html", user=current_user, category=category)
 
 
 @views.route('/delete-folder', methods=['POST'])
@@ -52,3 +60,18 @@ def note_view(folder_id):
             flash('Note added!', category='success')
 
     return render_template('notes.html', title = folder.name, folder = folder, user=current_user)
+
+@views.route('/delete-note', methods=['POST'])
+@login_required
+def delete_note():
+    note = json.loads(request.data)
+    noteId = note['noteId']
+    note = Note.query.get(noteId)
+    if note:
+            db.session.delete(note)
+            db.session.commit()
+
+    folder = Folder.query.get(Folder.id)
+
+    return render_template('notes.html', title = folder.name, folder = folder, user=current_user)
+
