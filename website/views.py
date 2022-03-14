@@ -1,4 +1,3 @@
-from unicodedata import name
 from flask import Blueprint, render_template, request, flash, jsonify
 from flask_login import login_required, current_user
 from .models import Note, Folder, Category
@@ -11,24 +10,20 @@ views = Blueprint('views', __name__)
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    #new_category = Category(name="Work")
-    #db.session.add(new_category)
-    #db.session.commit()
-    #new_category = Category(name="Hiking")
-    #db.session.add(new_category)
-    #db.session.commit()
     category = Category.query.all()
 
     if request.method == 'POST':
         folder = request.form.get('folder')
-
+        category = request.form.get('category')
         if len(folder) < 1:
             flash('Folder name is too short!', category='error')
         else:
-            new_folder = Folder(name=folder, user_id=current_user.id)
+            new_folder = Folder(name=folder, category_id=category, user_id=current_user.id)
             db.session.add(new_folder)
             db.session.commit()
             flash('Folder added!', category='success')
+
+        category = Category.query.all()
 
     return render_template("home.html", user=current_user, category=category)
 
@@ -45,21 +40,6 @@ def delete_folder():
 
     return jsonify({})
 
-@views.route('/home/<int:folder_id>', methods=['GET', 'POST'])
-def note_view(folder_id):
-    folder = Folder.query.get_or_404(folder_id)
-    if request.method == 'POST':
-        note = request.form.get('note')
-
-        if len(note) < 1:
-            flash('Note is too short!', category='error')
-        else:
-            new_note = Note(data=note, folder_id=folder.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
-
-    return render_template('notes.html', title = folder.name, folder = folder, user=current_user)
 
 @views.route('/delete-note', methods=['POST'])
 @login_required
@@ -68,10 +48,24 @@ def delete_note():
     noteId = note['noteId']
     note = Note.query.get(noteId)
     if note:
-            db.session.delete(note)
+        db.session.delete(note)
+        db.session.commit()
+
+    return jsonify({})
+
+
+@views.route('/home/<int:folder_id>', methods=['POST', 'GET'])
+def note_view(folder_id):
+    folder = Folder.query.get_or_404(folder_id)
+    if request.method == 'POST':
+        note = request.form.get('note')
+
+        if len(note) < 1:
+            flash('Note name is too short!', category='error')
+        else:
+            new_note = Note(data=note, folder_id=folder.id)
+            db.session.add(new_note)
             db.session.commit()
+            flash('Note added!', category='success')
 
-    folder = Folder.query.get(Folder.id)
-
-    return render_template('notes.html', title = folder.name, folder = folder, user=current_user)
-
+    return render_template('notes.html', title=folder.name, folder=folder, user=current_user)

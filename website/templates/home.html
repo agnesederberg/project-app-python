@@ -1,31 +1,35 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
   %}
   <h1 align="center">Folders</h1>
+  
   <ul class="list-group list-group-flush" id="folders">
     {% for folder in user.folders %}
         <a href="/home/{{ folder.id }}">
             <button>{{ folder.name }}</button>
         </a>
+        {% for category in category %}
+            {% if folder.category_id == category.id %}
+                <p>{{ category.name }}</p>
+            {% endif %}
+        {% endfor %}
       <button type="button" class="close" onClick="deleteFolder({{ folder.id }})">
         <span aria-hidden="true">&times;</span>
       </button>
     {% endfor %}
   </ul>
+  
   <form method="POST">
-    <textarea name="folder" id="folder" class="form-control"></textarea>
-    <br />
-    <div align="center">
-      <img src="https://www.iconpacks.net/icons/2/free-folder-icon-1439-thumb.png" width="100"/>
-      <button type="submit" class="btn btn-primary" style="background-color: rgb(52, 124, 50);">Add Folder</button>
-    </div>
+      <div align="center">
+              <textarea name="folder" id="folder" class="form-control"></textarea>
+              <img src="https://www.iconpacks.net/icons/2/free-folder-icon-1449-thumb.png" width="100"/>
+              <button type="submit" class="btn btn-primary" style="background-color: rgb(52, 124, 50);">Add Folder</button>
+        <label for="category">Choose a category:</label>
+          <select name="category" id="category">
+              {% for category in category %}
+                  <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+          </select>
+      </div>
   </form>
-  <form action="#">
-    <label for="category">Choose a category:</label>
-    <select name="Category" id="category">
-  {% for x in category %}
-      <option value="">{{ x.name }}</option>
-  {% endfor %}
-    </select>
-    <br><br>
-  </form>
+  
   {% endblock %}
