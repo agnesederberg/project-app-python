@@ -57,15 +57,21 @@ def delete_note():
 @views.route('/home/<int:folder_id>', methods=['POST', 'GET'])
 def note_view(folder_id):
     folder = Folder.query.get_or_404(folder_id)
+    search = None
     if request.method == 'POST':
-        note = request.form.get('note')
+        if request.form['submit'] == 'addNote':
+            note = request.form.get('note')
+            if len(note) < 1:
+                flash('Note name is too short!', category='error')
+            else:
+                new_note = Note(data=note, folder_id=folder.id)
+                db.session.add(new_note)
+                db.session.commit()
+                flash('Note added!', category='success')
+        elif request.form['submit'] == 'search':
+            search = request.form.get('search')
+        elif request.form['submit'] == 'clearSearch':
+            search = None
 
-        if len(note) < 1:
-            flash('Note name is too short!', category='error')
-        else:
-            new_note = Note(data=note, folder_id=folder.id)
-            db.session.add(new_note)
-            db.session.commit()
-            flash('Note added!', category='success')
 
-    return render_template('notes.html', title=folder.name, folder=folder, user=current_user)
+    return render_template('notes.html', title=folder.name, folder=folder, user=current_user, search=search)
